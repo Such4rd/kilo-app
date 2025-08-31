@@ -2,7 +2,7 @@
   "name": "KILO - Control de Calorías",
   "short_name": "KILO",
   "description": "App para control de calorías diario con gestión multi-usuario",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
