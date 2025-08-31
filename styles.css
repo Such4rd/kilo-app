@@ -207,6 +207,7 @@ body {
 
 .input-group input,
 .input-group select {
+    width: 100%;
     padding: 0.75rem;
     border: 2px solid rgba(102, 126, 234, 0.2);
     border-radius: 8px;
@@ -215,6 +216,8 @@ body {
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .input-group input:focus,
@@ -463,6 +466,15 @@ body {
     gap: 1rem;
     margin-bottom: 1rem;
     align-items: end;
+}
+
+.ingrediente-item .input-group {
+    min-width: 0;
+}
+
+.ingrediente-item input {
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .total-calorias {
@@ -748,16 +760,77 @@ body {
     
     .ingrediente-item {
         grid-template-columns: 1fr;
-        gap: 0.5rem;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .ingrediente-item .btn-remove {
+        justify-self: end;
+        margin-top: 0.5rem;
     }
     
     .nav-tabs {
         gap: 0.5rem;
+        justify-content: space-around;
     }
     
     .tab-btn {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1rem;
         font-size: 0.9rem;
+        flex: 1;
+        min-width: 0;
+    }
+    
+    /* Mejores inputs en móvil */
+    .input-group input,
+    .input-group select {
+        font-size: 16px; /* Evita zoom en iOS */
+        padding: 1rem;
+    }
+    
+    .fecha-selector {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .fecha-selector input {
+        width: 100%;
+    }
+    
+    .comida-form .form-row {
+        flex-direction: column;
+    }
+    
+    .total-calorias {
+        text-align: center;
+        font-size: 1rem;
+    }
+    
+    .progreso-diario {
+        padding: 1rem;
+    }
+    
+    .barra-progreso {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+    
+    .progreso-texto {
+        text-align: center;
+        font-size: 0.9rem;
+    }
+    
+    .install-btn {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 1rem;
+        width: 100%;
     }
     
     .calendario-grid {
@@ -779,13 +852,27 @@ body {
 }
 
 @media (max-width: 480px) {
-    .ingrediente-item {
-        grid-template-columns: 1fr;
+    .header {
+        padding: 1rem 0.5rem;
     }
     
-    .barra-progreso {
-        flex-direction: column;
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    .card {
+        padding: 1rem 0.75rem;
+    }
+    
+    .ingrediente-item {
+        grid-template-columns: 1fr;
         gap: 0.5rem;
+        padding: 0.75rem;
+    }
+    
+    .tab-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
     }
     
     .calendario-controls {
@@ -795,10 +882,29 @@ body {
     
     .usuario-selector {
         gap: 0.75rem;
+        padding: 0 0.5rem;
     }
     
     .modal-actions {
         flex-direction: column;
         gap: 0.75rem;
+    }
+    
+    .modal-body {
+        padding: 1rem 0.75rem;
+    }
+    
+    /* Inputs más grandes en pantallas muy pequeñas */
+    .input-group input,
+    .input-group select {
+        padding: 1.1rem;
+        font-size: 16px;
+    }
+    
+    .objetivo-personalizado {
+        padding: 0.75rem;
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+        width: calc(100% + 1.5rem);
     }
 }
