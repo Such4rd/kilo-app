@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Calorías</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="KILO">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23667eea'/%3E%3Ctext x='50' y='58' text-anchor='middle' fill='white' font-size='30' font-family='Arial'%3E🔥%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <div class="glass-container">
+        <header class="header">
+            <h1>🔥 KILO 🔥 </h1>
+            <div class="usuario-selector">
+                <select id="usuario-actual">
+                    <option value="">Seleccionar usuario...</option>
+                </select>
+                <button id="nuevo-usuario" class="btn btn-secondary">+ Nuevo Usuario</button>
+                <button id="eliminar-usuario" class="btn btn-remove">🗑️</button>
+            </div>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="perfil">Perfil</button>
+                <button class="tab-btn" data-tab="comidas">Comidas</button>
+                <button class="tab-btn" data-tab="calendario">Calendario</button>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <!-- Sección Perfil -->
+            <section id="perfil" class="tab-content active">
+                <div class="card">
+                    <h2>Tu Perfil</h2>
+                    <form id="perfil-form" class="form-grid">
+                        <div class="input-group">
+                            <label for="peso">Peso (kg)</label>
+                            <input type="number" id="peso" step="0.1" placeholder="70.5">
+                        </div>
+                        <div class="input-group">
+                            <label for="altura">Altura (cm)</label>
+                            <input type="number" id="altura" placeholder="175">
+                        </div>
+                        <div class="input-group">
+                            <label for="edad">Edad</label>
+                            <input type="number" id="edad" placeholder="25">
+                        </div>
+                        <div class="input-group">
+                            <label for="genero">Género</label>
+                            <select id="genero">
+                                <option value="hombre">Hombre</option>
+                                <option value="mujer">Mujer</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label for="actividad">Nivel de Actividad</label>
+                            <select id="actividad">
+                                <option value="1.2">Sedentario (poco/sin ejercicio)</option>
+                                <option value="1.375">Ligeramente activo (ejercicio ligero 1-3 días/sem)</option>
+                                <option value="1.55">Moderadamente activo (ejercicio moderado 3-5 días/sem)</option>
+                                <option value="1.725">Muy activo (ejercicio intenso 6-7 días/sem)</option>
+                                <option value="1.9">Extremadamente activo (ejercicio muy intenso 2x/día)</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label for="objetivo">Objetivo</label>
+                            <select id="objetivo">
+                                <option value="deficit">Perder peso (déficit calórico)</option>
+                                <option value="mantenimiento">Mantener peso</option>
+                                <option value="superavit">Ganar peso (superávit calórico)</option>
+                                <option value="personalizado">Objetivo personalizado</option>
+                            </select>
+                        </div>
+                        
+                        <div id="objetivo-personalizado" class="objetivo-personalizado hidden">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="peso-objetivo">Peso objetivo (kg)</label>
+                                    <input type="number" id="peso-objetivo" step="0.1" placeholder="65.0">
+                                </div>
+                                <div class="input-group">
+                                    <label for="tiempo-objetivo">Tiempo (semanas)</label>
+                                    <input type="number" id="tiempo-objetivo" min="1" max="52" placeholder="12">
+                                </div>
+                            </div>
+                            <div class="objetivo-info">
+                                <p id="objetivo-descripcion"></p>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Calcular Calorías</button>
+                    </form>
+                    
+                    <div id="resultado-calorias" class="resultado-calorias hidden">
+                        <h3>Tu Plan Calórico</h3>
+                        <div class="calorias-info">
+                            <div class="caloria-item">
+                                <span class="label">Metabolismo Basal (BMR):</span>
+                                <span class="valor" id="bmr-valor">0</span> kcal
+                            </div>
+                            <div class="caloria-item">
+                                <span class="label">Gasto Total Diario (TDEE):</span>
+                                <span class="valor" id="tdee-valor">0</span> kcal
+                            </div>
+                            <div class="caloria-item destacado">
+                                <span class="label">Objetivo Diario:</span>
+                                <span class="valor" id="objetivo-valor">0</span> kcal
+                            </div>
+                            <div class="caloria-item rango" id="rango-objetivo">
+                                <span class="label">Rango aceptable:</span>
+                                <span class="valor" id="rango-valor">0 - 0</span> kcal
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Comidas -->
+            <section id="comidas" class="tab-content">
+                <div class="card">
+                    <h2>Registro de Comidas</h2>
+                    <div class="fecha-selector">
+                        <label for="fecha-comida">Fecha:</label>
+                        <input type="date" id="fecha-comida">
+                    </div>
+                    
+                    <div class="progreso-diario">
+                        <h3>Progreso del día</h3>
+                        <div class="barra-progreso">
+                            <div class="barra-fondo">
+                                <div class="barra-llena" id="barra-progreso"></div>
+                            </div>
+                            <span class="progreso-texto">
+                                <span id="calorias-consumidas">0</span> / <span id="calorias-objetivo">0</span> kcal
+                            </span>
+                        </div>
+                    </div>
+
+                    <form id="comida-form" class="comida-form">
+                        <h3>Agregar Comida</h3>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="nombre-comida">Nombre de la comida</label>
+                                <input type="text" id="nombre-comida" placeholder="Ej: Desayuno">
+                            </div>
+                        </div>
+                        
+                        <div class="ingredientes-container">
+                            <h4>Ingredientes</h4>
+                            <div id="ingredientes-lista">
+                                <div class="ingrediente-item">
+                                    <div class="input-group">
+                                        <label>Ingrediente</label>
+                                        <input type="text" class="ingrediente-nombre" placeholder="Ej: Arroz">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Gramos</label>
+                                        <input type="number" class="ingrediente-gramos" placeholder="100">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Kcal/100g</label>
+                                        <input type="number" class="ingrediente-calorias" placeholder="130">
+                                    </div>
+                                    <button type="button" class="btn btn-remove" onclick="eliminarIngrediente(this)">❌</button>
+                                </div>
+                            </div>
+                            <button type="button" id="agregar-ingrediente" class="btn btn-secondary">+ Agregar Ingrediente</button>
+                        </div>
+                        
+                        <div class="total-calorias">
+                            <strong>Total: <span id="total-calorias-comida">0</span> kcal</strong>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Agregar Comida</button>
+                    </form>
+
+                    <div class="comidas-del-dia">
+                        <h3>Comidas del día</h3>
+                        <div id="lista-comidas-dia"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Calendario -->
+            <section id="calendario" class="tab-content">
+                <div class="card">
+                    <h2>Calendario de Progreso</h2>
+                    <div class="calendario-controls">
+                        <button id="mes-anterior" class="btn btn-secondary">‹</button>
+                        <h3 id="mes-actual"></h3>
+                        <button id="mes-siguiente" class="btn btn-secondary">›</button>
+                    </div>
+                    <div class="leyenda">
+                        <div class="leyenda-item">
+                            <div class="color-muestra cumplido"></div>
+                            <span>Objetivo cumplido</span>
+                        </div>
+                        <div class="leyenda-item">
+                            <div class="color-muestra no-cumplido"></div>
+                            <span>Objetivo no cumplido</span>
+                        </div>
+                        <div class="leyenda-item">
+                            <div class="color-muestra sin-datos"></div>
+                            <span>Sin datos</span>
+                        </div>
+                    </div>
+                    <div id="calendario-grid" class="calendario-grid"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para nuevo usuario -->
+    <div id="modal-usuario" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Crear Nuevo Usuario</h3>
+                <button class="modal-close" id="cerrar-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-nuevo-usuario">
+                    <div class="input-group">
+                        <label for="nombre-usuario">Nombre del usuario</label>
+                        <input type="text" id="nombre-usuario" placeholder="Ej: Juan Pérez" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelar-usuario">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
